@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
 
 	//// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
-	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	//Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
 	//PolyMesh *pm = new PolyMesh((char *)"teapot.ply", transform);
@@ -34,9 +34,9 @@ int main(int argc, char *argv[])
 
 	//convert image pixel co-ordinates into co-ordinates of the space
 	pixel_vec[image_width][image_height];
-	for (int i{ 0 }, i < image_width, i++)
+	for (int i{ 0 }; i < image_width; i++)
 	{
-		for (int j{ 0 }, j < image_height, j++)
+		for (int j{ 0 }; j < image_height; j++)
 		{
 			pixel_vec[i][j] = camera.pixel_coord(i, j);
 		}
@@ -55,9 +55,9 @@ int main(int argc, char *argv[])
 	Ray ray;
 	Vector pixel_col{ black };
 	
-	for (int i{ 0 }, i < image_width, i++)
+	for (int i{ 0 }; i < image_width; i++)
 	{
-		for (int j{ 0 }, j < image_height, j++)
+		for (int j{ 0 }; j < image_height; j++)
 		{
 			pixel_col = black;
 			ray_direction = pixel_vec[i][j] - camera.focal_p;
