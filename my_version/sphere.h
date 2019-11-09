@@ -19,9 +19,8 @@ public:
 		centre = c; 
 		radius = r;
 	}
-	
 
-	void intersection(Ray ray, Hit &hit);
+	void intersection(Ray ray, Hit &hit)
 	{
 		
 	}

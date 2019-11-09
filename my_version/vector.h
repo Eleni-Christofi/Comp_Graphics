@@ -68,4 +68,14 @@ public:
 	  result.y = z*other.x - x*other.z;
 	  result.z = x*other.y - y*other.x;
 	}
+
+	Vector operator * (float n)
+	{
+		return Vector(x*n, y*n, z*n);
+	}
+
+	Vector operator + (Vector v)
+	{
+		return Vector(x + v.x, y + v.y, z + v.z);
+	}
 };

@@ -97,4 +97,55 @@ void PolyMesh::do_construct(char *file, Transform *transform)
 
 }
 
+void Polymesh::intersection(Ray ray, Hit hit)
+{
+	//for each triangle in the mesh
+	for (int i{ 0 }; i < triangle_count; i++)
+	{
+		//triangle vertices
+		Vector v0 = triangle[i][0];
+		Vector v1 = triangle[i][1];
+		Vector v2 = triangle[i][2];
 
+		//set up plane for triangle
+		Vector AB =  v1 - v0;
+		Vector AC = v2 - v0;
+		Vector tnorm = AB.cross(AC, tnorm);
+		tnorm = tnorm.normalise();
+		float D = AB.dot(tnorm);
+
+		//if the ray and plane are parallel, no intersection
+		if (tnorm.dot(ray.direction) = 0) continue;
+		
+		//find t in ray equation p + td
+		float t = -(tnorm.dot(ray.position) + D) / tnorm.dot(ray.direction);
+
+		//check if triangle is behind ray
+		if (t < 0) continue;
+
+		//define plane intersection location
+		Vector phit = ray.position + t * (ray.direction);
+
+		//is p inside triangle boundary
+		Vector edge0 = v1 - v0;
+		Vector edge1 = v2 - v1;
+		Vector edge2 = v0 - v2;
+		Vector c0 = phit - v0;
+		Vector c1 = phit - v1;
+		Vector c2 = phit - v2;
+		Vector r0 = edge0.cross(c0, r0);
+		Vector r1 = edge1.cross(c1, r1);
+		Vector r2 = edge2.cross(c2, r2);
+		
+		if (tnorm.dot(r0) > 0 && tnorm.dot(r1) > 0 && tnorm.dot(r2) > 0)
+		{
+			hit.flag = true;
+			hit.t = t;
+			hit.position = phit;
+			hit.normal = tnorm.normalise();
+			break;
+		}
+
+
+	}
+}

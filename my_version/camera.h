@@ -1,9 +1,8 @@
-#include vector.h
-#include vertex.h
+#include "vector.h"
+#include "vertex.h"
 
 struct Camera
 {
-	Vertex focal_point;
 	Vector focal_p;
 	float focal_length;
 	Vector forward_dir;
@@ -18,7 +17,7 @@ struct Camera
 
 	Camera()
 	{
-		focal_point = Vector();
+		focal_p = Vector();
 		focal_length = 1.0f;
 		forward_dir = Vector(0, 0, -1);
 		up_dir = Vector(0, 1, 0);
@@ -34,7 +33,7 @@ struct Camera
 
 	Camera(Vector fp, float fl, Vector fd, Vector ud, Vector rd, float ih, float iw, float rh, float rw)
 	{
-		focal_point = fp;
+		focal_p = fp;
 		focal_length = fl;
 		forward_dir = fd;
 		up_dir = ud;
@@ -52,7 +51,7 @@ struct Camera
 		float r = 0.5 - (((0.5 + j) / reso_w)*image_w);
 		float b = 0.5 - (((0.5 + i) / reso_h)*image_h);
 
-		return (focal_point + (focal_length*forward_dir) + (b*up_dir) + (r*right_dir));
+		return (focal_p + (forward_dir * (focal_length)) + (up_dir * (b)) + (right_dir * (r)));
 	}
 
 };

@@ -14,14 +14,14 @@
 
 class Ray {
 public:
-	Vertex position;
+	Vector position;
 	Vector direction;
 
 	Ray()
 	{
 	}
 
-	Ray(Vertex p, Vector d)
+	Ray(Vector p, Vector d)
 	{
 		position = p;
 		direction = d;
