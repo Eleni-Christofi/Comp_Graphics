@@ -111,11 +111,14 @@ void Polymesh::intersection(Ray ray, Hit hit)
 		Vector AB =  v1 - v0;
 		Vector AC = v2 - v0;
 		Vector tnorm = AB.cross(AC, tnorm);
-		tnorm = tnorm.normalise();
+		tnorm.normalise();
 		float D = AB.dot(tnorm);
 
 		//if the ray and plane are parallel, no intersection
-		if (tnorm.dot(ray.direction) = 0) continue;
+		if (tnorm.dot(ray.direction) == 0) continue;
+
+		//if the object is backwards facing, we don't want to show it
+		if (tnorm.dot(ray.direction) > 0) tnorm.negate();
 		
 		//find t in ray equation p + td
 		float t = -(tnorm.dot(ray.position) + D) / tnorm.dot(ray.direction);
@@ -124,7 +127,7 @@ void Polymesh::intersection(Ray ray, Hit hit)
 		if (t < 0) continue;
 
 		//define plane intersection location
-		Vector phit = ray.position + t * (ray.direction);
+		Vector phit = ray.position + (ray.direction)*t;
 
 		//is p inside triangle boundary
 		Vector edge0 = v1 - v0;
@@ -142,7 +145,7 @@ void Polymesh::intersection(Ray ray, Hit hit)
 			hit.flag = true;
 			hit.t = t;
 			hit.position = phit;
-			hit.normal = tnorm.normalise();
+			hit.normal = tnorm;
 			break;
 		}
 

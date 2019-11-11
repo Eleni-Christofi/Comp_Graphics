@@ -1,10 +1,10 @@
-#include "Scene.h"
+#include "scene.h"
 #include "vector.h"
 #include "object.h"
 #include "ray.h"
 #include "hit.h"
 
-Vector Scene::get_pixel_depth(Ray ray)
+float Scene::get_pixel_depth(Ray ray)
 {
 	Hit* closest;
 	closest.t = FLT_MAX;
@@ -28,7 +28,7 @@ Vector Scene::get_pixel_depth(Ray ray)
 		return closest.t;
 	}
 
-	return Vector(0, 0, 0);
+	return float -1.0f;
 }
 
 Vector Scene::get_pixel_colour(Ray ray)

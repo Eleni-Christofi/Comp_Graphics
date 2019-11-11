@@ -1,15 +1,18 @@
 #pragma once
 #include "vector.h"
 #include "object.h"
+#include <vector>
+
+using namespace std;
 
 class Scene
 {
+public:
 	Vector ambient_col;
-	vector<Object*> objects;
+	std::vector<Object*> objects;
 
-	Vector get_pixel_col()
-	{
 
-	}
+	Vector get_pixel_colour(Ray ray) {};
+	float get_pixel_depth(Ray ray) {};
 
-}
+};

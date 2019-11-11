@@ -4,6 +4,10 @@
 #include "framebuffer.h"
 #include "camera.h"
 #include "scene.h"
+#include "transform.h"
+#include "object.h"
+#include "polymesh.h"
+#include "sphere.h"
 
 using namespace std;
 
@@ -28,15 +32,15 @@ int main(int argc, char *argv[])
 	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
-	PolyMesh *pm = new PolyMesh((char *)"teapot.ply", transform);
+	PolyMesh pm ((char *)"teapot.ply", transform);
 
 	//add teapot to scene 
-	scene.objects.pushback(pm);
+	scene.objects.push_back(pm);
 
 	
 
 	//convert image pixel co-ordinates into co-ordinates of the space
-	pixel_vec[image_width][image_height];
+	Vector pixel_vec[image_width][image_height];
 	for (int i{ 0 }; i < image_width; i++)
 	{
 		for (int j{ 0 }; j < image_height; j++)
@@ -64,7 +68,7 @@ int main(int argc, char *argv[])
 
 			ray_direction = pixel_vec[i][j] - camera.focal_p;
 			ray = Ray(camera.focal_p, ray_direction);
-			d = scene.get_pixel_depth(ray);
+			float d = scene.get_pixel_depth(ray);
 			fb->plotDepth(i, j, d);
 			
 		
