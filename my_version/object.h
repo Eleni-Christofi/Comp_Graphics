@@ -16,7 +16,7 @@ class Object {
 public:
 
 	Object *next;
-	Vector obj_col;
+	Vector colour;
 
 	Object()
 	{

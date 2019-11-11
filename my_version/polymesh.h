@@ -18,15 +18,12 @@ public:
 	int vertex_count;
 	int triangle_count;
     Vertex *vertex;
-	TriangleIndex *triangle;
+	TriangleIndex* triangleV ;
 
 	void do_construct(char *file, Transform *transform);
 	
 	PolyMesh(char *file);
 	PolyMesh(char *file, Transform *transform);
 	
-	void intersection(Ray ray, Hit &hit)
-	{
-
-	};
+	void intersection(Ray ray, Hit &hit);
 };

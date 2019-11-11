@@ -23,9 +23,10 @@ int main(int argc, char *argv[])
 
 	//Setting up a camera
 	Camera camera = Camera();
+	camera.focal_p = Vector(1,1,0);
 
 	//Set up the Scene object
-	Scene scene;
+	Scene scene = Scene();
 
 
 	//// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
@@ -35,7 +36,8 @@ int main(int argc, char *argv[])
 	PolyMesh pm ((char *)"teapot.ply", transform);
 
 	//add teapot to scene 
-	scene.objects.push_back(pm);
+	pm.next = scene.objects;
+	scene.objects = &pm;
 
 	
 

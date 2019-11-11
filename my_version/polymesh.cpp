@@ -53,7 +53,7 @@ void PolyMesh::do_construct(char *file, Transform *transform)
 	}
 
 	vertex = new Vertex[vertex_count];
-	triangle = new TriangleIndex[triangle_count];
+	triangleV = new TriangleIndex[triangle_count];
 
 	float x = 0.0f;
 	float y = 0.0f;
@@ -86,9 +86,9 @@ void PolyMesh::do_construct(char *file, Transform *transform)
 	
 		if (myfile>>k >> p >> q >> r)
 		{
-			triangle[i][0] = p - 1;
-			triangle[i][1] = q - 1;
-			triangle[i][2] = r - 1;
+			triangleV[i][0] = p - 1;
+			triangleV[i][1] = q - 1;
+			triangleV[i][2] = r - 1;
 		}
 
 		
@@ -97,15 +97,25 @@ void PolyMesh::do_construct(char *file, Transform *transform)
 
 }
 
-void Polymesh::intersection(Ray ray, Hit hit)
+void PolyMesh::intersection(Ray ray, Hit &hit)
 {
 	//for each triangle in the mesh
 	for (int i{ 0 }; i < triangle_count; i++)
 	{
+		Vector v0, v1, v2;
+
 		//triangle vertices
-		Vector v0 = triangle[i][0];
-		Vector v1 = triangle[i][1];
-		Vector v2 = triangle[i][2];
+		 v0.x = vertex[triangleV[i][0]].x;
+		 v0.y = vertex[triangleV[i][0]].y;
+		 v0.z = vertex[triangleV[i][0]].z;
+		 
+		 v1.x = vertex[triangleV[i][1]].x;
+		 v1.y = vertex[triangleV[i][1]].y;
+		 v1.z = vertex[triangleV[i][1]].z;
+		 
+		 v2.x = vertex[triangleV[i][2]].x;
+		 v2.y = vertex[triangleV[i][2]].y;
+		 v2.z = vertex[triangleV[i][2]].z;
 
 		//set up plane for triangle
 		Vector AB =  v1 - v0;
@@ -148,6 +158,7 @@ void Polymesh::intersection(Ray ray, Hit hit)
 			hit.normal = tnorm;
 			break;
 		}
+		
 
 
 	}

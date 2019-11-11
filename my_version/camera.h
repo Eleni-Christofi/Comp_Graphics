@@ -19,7 +19,7 @@ struct Camera
 	{
 		focal_p = Vector();
 		focal_length = 1.0f;
-		forward_dir = Vector(0, 0, -1);
+		forward_dir = Vector(0, 0, 1);
 		up_dir = Vector(0, 1, 0);
 		right_dir = Vector(1, 0, 0);
 		image_h = 100;

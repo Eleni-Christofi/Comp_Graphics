@@ -3,15 +3,17 @@
 #include "object.h"
 #include "ray.h"
 #include "hit.h"
+#include <float.h>
 
 float Scene::get_pixel_depth(Ray ray)
 {
-	Hit* closest;
+	Hit closest;
 	closest.t = FLT_MAX;
-	for (int i{ 0 }; i < objects.size; i++)
+	Object* object = objects;
+	while(object!=0)
 	{
 		Hit hit;
-		scene_objects[i].intersection(ray, hit);
+		object->intersection(ray, hit);
 		if (hit.flag)
 		{
 			if (hit.t < closest.t && hit.t > 0)
@@ -19,7 +21,7 @@ float Scene::get_pixel_depth(Ray ray)
 				closest = hit;
 			}
 		}
-
+		object = object->next;
 	}
 
 	if (closest.flag)
@@ -28,33 +30,37 @@ float Scene::get_pixel_depth(Ray ray)
 		return closest.t;
 	}
 
-	return float -1.0f;
+	return -1.0f;
 }
 
 Vector Scene::get_pixel_colour(Ray ray)
 {
-	Hit* closest;
+	Vector colour;
+	Hit closest;
 	closest.t = FLT_MAX;
-	for (int i{ 0 }; i < objects.size; i++)
+	Object* object = objects;
+	while(object!=0)
 	{
 		Hit hit;
-		scene_objects[i].intersection(ray, hit);
+		object ->intersection(ray, hit);
 		if (hit.flag)
 		{
 			if (hit.t < closest.t && hit.t > 0)
 			{
 				closest = hit;
+				
 			}
 		}
-
+		object = object->next;
 	}
+	colour = closest.what->colour;
 
 	if (closest.flag)
 	{
-		closest.colour.x = (closest.colour.x > 255) ? 255 : (closest.colour.x < 0) ? 0 : closest.colour.x;
-		closest.colour.y = (closest.colour.y > 255) ? 255 : (closest.colour.y < 0) ? 0 : closest.colour.y;
-		closest.colour.z = (closest.colour.x > 255) ? 255 : (closest.colour.z < 0) ? 0 : closest.colour.z;
-		return closest.colour;
+		colour.x = (colour.x > 255) ? 255 : (colour.x < 0) ? 0 : colour.x;
+		colour.y = (colour.y > 255) ? 255 : (colour.y < 0) ? 0 : colour.y;
+		colour.z = (colour.x > 255) ? 255 : (colour.z < 0) ? 0 : colour.z;
+		return colour;
 	}
 
 	return Vector(0, 0, 0);
