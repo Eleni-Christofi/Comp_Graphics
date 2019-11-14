@@ -63,10 +63,11 @@ Vector Scene::get_pixel_colour(Ray ray)
 		colour.x = (colour.x > 255) ? 255 : (colour.x < 0) ? 0 : colour.x;
 		colour.y = (colour.y > 255) ? 255 : (colour.y < 0) ? 0 : colour.y;
 		colour.z = (colour.x > 255) ? 255 : (colour.z < 0) ? 0 : colour.z;
-		return colour;
 		cout << "hit " << colour.x << " " << colour.y << " " << colour.z << endl;
+		return colour;
+		
 	}
-
-	return Vector(0, 0, 0);
 	cout << "miss" << endl;
+	return Vector(0, 0, 0);
+	
 }

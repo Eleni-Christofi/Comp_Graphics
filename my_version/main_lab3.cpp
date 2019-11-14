@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
 	sphere.colour = Vector(255, 255, 255);
 	sphere.next = scene.objects;
 	scene.objects = &sphere;
+	
+	cout << "sphere added" << endl;
 
 	
 
