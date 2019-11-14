@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "scene.h"
 #include "vector.h"
 #include "object.h"
@@ -27,10 +29,12 @@ float Scene::get_pixel_depth(Ray ray)
 	if (closest.flag)
 	{
 		closest.t = (closest.t > 255) ? 255 : (closest.t < 0) ? 0 : closest.t;
-		return closest.t;
+		cout << "hit " << closest.t << endl;
+		return 1/(closest.t);
 	}
 
 	return -1.0f;
+	cout << "miss" << endl;
 }
 
 Vector Scene::get_pixel_colour(Ray ray)
@@ -48,7 +52,6 @@ Vector Scene::get_pixel_colour(Ray ray)
 			if (hit.t < closest.t && hit.t > 0)
 			{
 				closest = hit;
-				
 			}
 		}
 		object = object->next;
@@ -61,7 +64,9 @@ Vector Scene::get_pixel_colour(Ray ray)
 		colour.y = (colour.y > 255) ? 255 : (colour.y < 0) ? 0 : colour.y;
 		colour.z = (colour.x > 255) ? 255 : (colour.z < 0) ? 0 : colour.z;
 		return colour;
+		cout << "hit " << colour.x << " " << colour.y << " " << colour.z << endl;
 	}
 
 	return Vector(0, 0, 0);
+	cout << "miss" << endl;
 }

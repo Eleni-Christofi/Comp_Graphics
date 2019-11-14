@@ -47,9 +47,7 @@ void PolyMesh::do_construct(char *file, Transform *transform)
 	if (myfile >> a >> b >> c >> d >> e >> f)
 	{
 		vertex_count = c;
-		cout << vertex_count <<endl;
 		triangle_count = f;
-		cout << triangle_count <<endl;
 	}
 
 	vertex = new Vertex[vertex_count];

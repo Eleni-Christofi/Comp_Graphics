@@ -22,22 +22,39 @@ int main(int argc, char *argv[])
 	FrameBuffer *fb = new FrameBuffer(image_width, image_height);
 
 	//Setting up a camera
-	Camera camera = Camera();
-	camera.focal_p = Vector(1,1,0);
+	Vector fp = Vector(1,1,-1000);
+	float fl = 1.0f;
+	Vector look = Vector(2,1,-5) - fp;
+	Vector up = Vector(1,2,-5) - fp;
+	float ih = 20;
+	float iw = 20;
+	Camera camera = Camera(fp,fl,look,up,ih,iw,image_height,image_width);
+
+	cout << "camera set up" << endl;
 
 	//Set up the Scene object
 	Scene scene = Scene();
+	cout << "empty scene set up" << endl;
 
 
 	//// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
-	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	//Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
-	PolyMesh pm ((char *)"teapot.ply", transform);
+	//PolyMesh pm ((char *)"teapot.ply", transform);
+
+	//cout << "teapot loaded" << endl;
 
 	//add teapot to scene 
-	pm.next = scene.objects;
-	scene.objects = &pm;
+	//pm.next = scene.objects;
+	//scene.objects = &pm;
+
+	//cout << "teapot added to scene" << endl;
+
+	Sphere sphere = Sphere(Vertex(1, 1, 0), 1.0f);
+	sphere.colour = Vector(255, 255, 255);
+	sphere.next = scene.objects;
+	scene.objects = &sphere;
 
 	
 
@@ -50,6 +67,8 @@ int main(int argc, char *argv[])
 			pixel_vec[i][j] = camera.pixel_coord(i, j);
 		}
 	}
+
+	cout << "pixel_coords converted" << endl;
 
 	//colours 
 	Vector white(255, 255, 255);
@@ -70,14 +89,14 @@ int main(int argc, char *argv[])
 
 			ray_direction = pixel_vec[i][j] - camera.focal_p;
 			ray = Ray(camera.focal_p, ray_direction);
-			float d = scene.get_pixel_depth(ray);
-			fb->plotDepth(i, j, d);
+			Vector colour = scene.get_pixel_colour(ray);
+			fb->plotPixel(i, j, colour.x, colour.y, colour.z);
 			
 		
 
 		}
 	}
-	fb->writeDepthFile((char *)"test.ppm");
+	fb->writeRGBFile((char *)"test.ppm");
 }
 
 
@@ -90,4 +109,3 @@ int main(int argc, char *argv[])
 //float dt = L.dot(N);
 //hit.colour = white * dt;
 //clamp255(hit.colour);
-//fb->plotPixel(i, j, hit.colour.x, hit.colour.y, hit.colour.z);
