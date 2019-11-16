@@ -8,6 +8,7 @@
 #include "object.h"
 #include "polymesh.h"
 #include "sphere.h"
+#include <float.h>
 
 using namespace std;
 
@@ -22,12 +23,12 @@ int main(int argc, char *argv[])
 	FrameBuffer *fb = new FrameBuffer(image_width, image_height);
 
 	//Setting up a camera
-	Vector fp = Vector(1,1,-1000);
-	float fl = 1.0f;
-	Vector look = Vector(2,1,-5) - fp;
-	Vector up = Vector(1,2,-5) - fp;
-	float ih = 20;
-	float iw = 20;
+	Vector fp = Vector(0,0,-10);
+	float fl = 10.0f;
+	Vector look = Vector(0, 0, 1);
+	Vector up = Vector(0, 1, 0);
+	float ih = 10;
+	float iw = 10;
 	Camera camera = Camera(fp,fl,look,up,ih,iw,image_height,image_width);
 
 	cout << "camera set up" << endl;
@@ -41,58 +42,43 @@ int main(int argc, char *argv[])
 	//Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
-	//PolyMesh pm ((char *)"teapot.ply", transform);
+	PolyMesh pm ((char *)"teapot.ply");
+	pm.colour = Vector(255, 0, 0);
 
-	//cout << "teapot loaded" << endl;
+	cout << "teapot loaded" << endl;
 
 	//add teapot to scene 
-	//pm.next = scene.objects;
-	//scene.objects = &pm;
+	pm.next = scene.objects;
+	scene.objects = &pm;
 
-	//cout << "teapot added to scene" << endl;
+	cout << "teapot added to scene" << endl;
 
-	Sphere sphere = Sphere(Vertex(1, 1, 0), 1.0f);
+	
+	/**Sphere sphere = Sphere(Vertex(1, 1, 0), 1.0f);
 	sphere.colour = Vector(255, 255, 255);
 	sphere.next = scene.objects;
 	scene.objects = &sphere;
 	
 	cout << "sphere added" << endl;
-
+	*/
 	
 
-	//convert image pixel co-ordinates into co-ordinates of the space
-	Vector pixel_vec[image_width][image_height];
-	for (int i{ 0 }; i < image_width; i++)
-	{
-		for (int j{ 0 }; j < image_height; j++)
-		{
-			pixel_vec[i][j] = camera.pixel_coord(i, j);
-		}
-	}
-
-	cout << "pixel_coords converted" << endl;
-
-	//colours 
-	Vector white(255, 255, 255);
-	Vector black(0, 0, 0);
-	Vector red(255, 0, 0);
-	Vector green(0, 255, 0);
-	Vector blue(0, 0, 255);
-
+	
 
 	//raytracing
 	Vector ray_direction = Vector();
 	Ray ray;
 	
-	for (int i{ 0 }; i < image_width; i++)
+	for (int i{ 0 }; i < image_width + 1; i++)
 	{
-		for (int j{ 0 }; j < image_height; j++)
+		for (int j{ 0 }; j < image_height + 1; j++)
 		{
+			vector<float> pixel_info;
+			ray = camera.make_ray(i, j);
+			pixel_info = scene.get_pixel(ray);
+			fb->plotPixel(i, j, pixel_info[0], pixel_info[1] , pixel_info[2]);
+			fb->plotDepth(i, j, pixel_info[3]);
 
-			ray_direction = pixel_vec[i][j] - camera.focal_p;
-			ray = Ray(camera.focal_p, ray_direction);
-			Vector colour = scene.get_pixel_colour(ray);
-			fb->plotPixel(i, j, colour.x, colour.y, colour.z);
 			
 		
 
@@ -102,12 +88,3 @@ int main(int argc, char *argv[])
 }
 
 
-
-//const Sphere light(Vector(0, 0, 50), 1);
-//Vector L = light.c - hit.position;
-//L = L.normalise();
-//Vector N = hit.normal;
-//N = N.normalise();
-//float dt = L.dot(N);
-//hit.colour = white * dt;
-//clamp255(hit.colour);

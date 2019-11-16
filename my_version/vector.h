@@ -85,8 +85,5 @@ public:
 		return Vector(x - v.x, y - v.y, z - v.z);
 	}
 
-	Vector operator = (Vector v)
-	{
-		return Vector(v.x, v.y, v.z);
-	}
+
 };

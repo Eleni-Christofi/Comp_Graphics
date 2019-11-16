@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "polymesh.h"
+#include <float.h>
 
 using namespace std;
 
@@ -133,6 +134,7 @@ void PolyMesh::intersection(Ray ray, Hit &hit)
 
 		//check if triangle is behind ray
 		if (t < 0) continue;
+
 
 		//define plane intersection location
 		Vector phit = ray.position + (ray.direction)*t;

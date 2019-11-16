@@ -1,8 +1,13 @@
 #include "vector.h"
 #include "vertex.h"
+#include "ray.h"
+#include <iostream>
+
+using namespace std;
 
 struct Camera
 {
+public:
 	Vector focal_p;
 	float focal_length;
 	Vector w; //look direction
@@ -14,25 +19,12 @@ struct Camera
 	float reso_w;
 	float pixel_h;
 	float pixel_w;
+	Vector top_left;
 
-	Camera()
-	{
-		focal_p = Vector();
-		focal_length = 1.0f;
-		w = Vector(0, 0, 1);
-		v = Vector(0, 1, 0);
-		u = Vector(1, 0, 0);
-		image_h = 100;
-		image_w = 100;
-		reso_h = 128;
-		reso_w = 128;
-		pixel_h = image_h / reso_h;
-		pixel_w = image_w / reso_w;
-
-	}
-
+	//constructor
 	Camera(Vector fp, float fl, Vector look, Vector up, float ih, float iw, float rh, float rw)
 	{
+		look.negate();
 		focal_p = fp;
 		focal_length = fl;
 		w = look;
@@ -44,14 +36,24 @@ struct Camera
 		reso_w = rw;
 		pixel_h = ih / rh;
 		pixel_w = iw / rw;
+
+		top_left = fp + (w*fl) - (u*(iw / 2)) + (v*(ih / 2));
 	}
 
-	Vector pixel_coord(int i, int j)
-	{
-		float r = 0.5 - (((0.5 + j) / reso_w)*image_w);
-		float b = 0.5 - (((0.5 + i) / reso_h)*image_h);
+	//deconstructor 
+	~Camera() {};
 
-		return (focal_p + (w * (focal_length)) + (v * (b)) + (u * (r)));
+	//method to calculate ray to pixel (i,j) from camera 
+	Ray make_ray(int i, int j)
+	{
+		Vector point = top_left + (u*i*pixel_w) - (v*j*pixel_h);
+		//cout << "Top Left" << top_left.x << " " << top_left.y << " " << top_left.z << endl;
+		//cout << "i: " << i << " j: " << j << endl;
+		//cout << "Point" << point.x << " " << point.y << " " << point.z << endl;
+		//cout << endl;
+		Vector dir = point - focal_p;
+		dir.normalise();
+		return Ray(focal_p, dir);
 	}
 
 };

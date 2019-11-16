@@ -7,8 +7,11 @@
 #include "hit.h"
 #include <float.h>
 
-float Scene::get_pixel_depth(Ray ray)
+using namespace std;
+
+vector<float> Scene::get_pixel(Ray ray)
 {
+	Vector colour;
 	Hit closest;
 	closest.t = FLT_MAX;
 	Object* object = objects;
@@ -18,38 +21,7 @@ float Scene::get_pixel_depth(Ray ray)
 		object->intersection(ray, hit);
 		if (hit.flag)
 		{
-			if (hit.t < closest.t && hit.t > 0)
-			{
-				closest = hit;
-			}
-		}
-		object = object->next;
-	}
-
-	if (closest.flag)
-	{
-		closest.t = (closest.t > 255) ? 255 : (closest.t < 0) ? 0 : closest.t;
-		cout << "hit " << closest.t << endl;
-		return 1/(closest.t);
-	}
-
-	return -1.0f;
-	cout << "miss" << endl;
-}
-
-Vector Scene::get_pixel_colour(Ray ray)
-{
-	Vector colour;
-	Hit closest;
-	closest.t = FLT_MAX;
-	Object* object = objects;
-	while(object!=0)
-	{
-		Hit hit;
-		object ->intersection(ray, hit);
-		if (hit.flag)
-		{
-			if (hit.t < closest.t && hit.t > 0)
+			if (hit.t < closest.t && hit.t > 0.01)
 			{
 				closest = hit;
 			}
@@ -60,14 +32,18 @@ Vector Scene::get_pixel_colour(Ray ray)
 
 	if (closest.flag)
 	{
+		float t = 1 / closest.t;
+		t = (t > 255) ? 255 : (t < 0.01) ? 0 : t;
 		colour.x = (colour.x > 255) ? 255 : (colour.x < 0) ? 0 : colour.x;
 		colour.y = (colour.y > 255) ? 255 : (colour.y < 0) ? 0 : colour.y;
 		colour.z = (colour.x > 255) ? 255 : (colour.z < 0) ? 0 : colour.z;
-		cout << "hit " << colour.x << " " << colour.y << " " << colour.z << endl;
-		return colour;
+		cout << "hit " << closest.t << endl;
 		
+		vector<float> stuff{ colour.x,colour.y,colour.z, t};
+		return stuff;
 	}
-	cout << "miss" << endl;
-	return Vector(0, 0, 0);
-	
+
+	vector<float> miss{ 0,0,0,-1.0f };
+	return miss;
 }
+

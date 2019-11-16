@@ -20,7 +20,7 @@ public:
 	}
 
 
-	Vector get_pixel_colour(Ray ray);
-	float get_pixel_depth(Ray ray);
+	vector<float> get_pixel(Ray ray);
+
 
 };
