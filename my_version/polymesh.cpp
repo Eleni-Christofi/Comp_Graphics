@@ -152,8 +152,10 @@ void PolyMesh::intersection(Ray ray, Hit &hit)
 		
 		if (tnorm.dot(r0) > 0 && tnorm.dot(r1) > 0 && tnorm.dot(r2) > 0)
 		{
+			
 			hit.flag = true;
 			hit.t = t;
+			hit.what = this;
 			hit.position = phit;
 			hit.normal = tnorm;
 			break;

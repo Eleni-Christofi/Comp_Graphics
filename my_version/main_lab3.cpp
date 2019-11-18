@@ -9,6 +9,7 @@
 #include "polymesh.h"
 #include "sphere.h"
 #include <float.h>
+#include <vector>
 
 using namespace std;
 
@@ -18,18 +19,18 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	// Create a framebuffer
-	int image_width = 128;
-	int image_height = 128;
-	FrameBuffer *fb = new FrameBuffer(image_width, image_height);
+	int pixel_width = 128;
+	int pixel_height = 128;
+	FrameBuffer *fb = new FrameBuffer(pixel_width, pixel_height);
 
 	//Setting up a camera
-	Vector fp = Vector(0,0,-10);
-	float fl = 10.0f;
+	Vector fp = Vector(0,0,0);
+	float fl = 1.0f;
 	Vector look = Vector(0, 0, 1);
 	Vector up = Vector(0, 1, 0);
-	float ih = 10;
-	float iw = 10;
-	Camera camera = Camera(fp,fl,look,up,ih,iw,image_height,image_width);
+	float ih = 2;
+	float iw = 2;
+	Camera camera = Camera(fp,fl,look,up,ih,iw,pixel_height,pixel_width);
 
 	cout << "camera set up" << endl;
 
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
 	//Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
-	PolyMesh pm ((char *)"teapot.ply");
+	/**PolyMesh pm ((char *)"teapot.ply");
 	pm.colour = Vector(255, 0, 0);
 
 	cout << "teapot loaded" << endl;
@@ -52,15 +53,16 @@ int main(int argc, char *argv[])
 	scene.objects = &pm;
 
 	cout << "teapot added to scene" << endl;
-
+	*/
 	
-	/**Sphere sphere = Sphere(Vertex(1, 1, 0), 1.0f);
+	Sphere sphere = Sphere(Vertex(0, 0, 5), 1.0f);
 	sphere.colour = Vector(255, 255, 255);
 	sphere.next = scene.objects;
 	scene.objects = &sphere;
 	
 	cout << "sphere added" << endl;
-	*/
+
+
 	
 
 	
@@ -69,14 +71,17 @@ int main(int argc, char *argv[])
 	Vector ray_direction = Vector();
 	Ray ray;
 	
-	for (int i{ 0 }; i < image_width + 1; i++)
+	for (int i{ 0 }; i < pixel_width + 1; i++)
 	{
-		for (int j{ 0 }; j < image_height + 1; j++)
+		for (int j{ 0 }; j < pixel_height + 1; j++)
 		{
 			vector<float> pixel_info;
+			//cout << "made pixel info" << endl;
 			ray = camera.make_ray(i, j);
+			//cout << "gotten ray" << endl;
 			pixel_info = scene.get_pixel(ray);
-			fb->plotPixel(i, j, pixel_info[0], pixel_info[1] , pixel_info[2]);
+			//cout << "got pixel info" << endl;
+			fb->plotPixel(i, j, pixel_info[0], pixel_info[1], pixel_info[2]);
 			fb->plotDepth(i, j, pixel_info[3]);
 
 			
