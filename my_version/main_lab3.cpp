@@ -24,13 +24,13 @@ int main(int argc, char *argv[])
 	FrameBuffer *fb = new FrameBuffer(pixel_width, pixel_height);
 
 	//Setting up a camera
-	Vector fp = Vector(0,0,0);
+	Vector fp = Vector(0, 0, 0);
 	float fl = 1.0f;
 	Vector look = Vector(0, 0, 1);
 	Vector up = Vector(0, 1, 0);
 	float ih = 2;
 	float iw = 2;
-	Camera camera = Camera(fp,fl,look,up,ih,iw,pixel_height,pixel_width);
+	Camera camera = Camera(fp, fl, look, up, ih, iw, pixel_height, pixel_width);
 
 	cout << "camera set up" << endl;
 
@@ -40,37 +40,37 @@ int main(int argc, char *argv[])
 
 
 	//// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
-	//Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
-	/**PolyMesh pm ((char *)"teapot.ply");
+	PolyMesh pm ((char *)"teapot.ply", transform);
 	pm.colour = Vector(255, 0, 0);
 
 	cout << "teapot loaded" << endl;
 
-	//add teapot to scene 
+	//add teapot to scene
 	pm.next = scene.objects;
 	scene.objects = &pm;
 
 	cout << "teapot added to scene" << endl;
-	*/
 	
-	Sphere sphere = Sphere(Vertex(0, 0, 5), 1.0f);
+
+	/**Sphere sphere = Sphere(Vertex(0, 0, 10), 3);
 	sphere.colour = Vector(255, 255, 255);
 	sphere.next = scene.objects;
 	scene.objects = &sphere;
-	
+
 	cout << "sphere added" << endl;
 
+	*/
 
-	
 
-	
+
 
 	//raytracing
 	Vector ray_direction = Vector();
 	Ray ray;
-	
+
 	for (int i{ 0 }; i < pixel_width + 1; i++)
 	{
 		for (int j{ 0 }; j < pixel_height + 1; j++)
@@ -84,12 +84,15 @@ int main(int argc, char *argv[])
 			fb->plotPixel(i, j, pixel_info[0], pixel_info[1], pixel_info[2]);
 			fb->plotDepth(i, j, pixel_info[3]);
 
-			
-		
+
+
 
 		}
 	}
-	fb->writeRGBFile((char *)"test.ppm");
+	cout << "Writing files..." << endl;
+	//	fb->writeRGBFile((char *)"test.ppm");
+	fb->writeDepthFile((char *)"test_depth.ppm");
 }
+
 
 

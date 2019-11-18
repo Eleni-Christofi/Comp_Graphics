@@ -104,13 +104,13 @@ void PolyMesh::intersection(Ray ray, Hit &hit)
 		Vector v0, v1, v2;
 
 		//triangle vertices
-		 v0.x = vertex[triangleV[i][0]].x;
-		 v0.y = vertex[triangleV[i][0]].y;
-		 v0.z = vertex[triangleV[i][0]].z;
+		 v0.x = vertex[triangleV[i][0]].x; 
+		 v0.y = vertex[triangleV[i][0]].y; 
+		 v0.z = vertex[triangleV[i][0]].z; 
 		 
-		 v1.x = vertex[triangleV[i][1]].x;
-		 v1.y = vertex[triangleV[i][1]].y;
-		 v1.z = vertex[triangleV[i][1]].z;
+		 v1.x = vertex[triangleV[i][1]].x; 
+		 v1.y = vertex[triangleV[i][1]].y; 
+		 v1.z = vertex[triangleV[i][1]].z; 
 		 
 		 v2.x = vertex[triangleV[i][2]].x;
 		 v2.y = vertex[triangleV[i][2]].y;
@@ -121,19 +121,19 @@ void PolyMesh::intersection(Ray ray, Hit &hit)
 		Vector AC = v2 - v0;
 		Vector tnorm = AB.cross(AC, tnorm);
 		tnorm.normalise();
-		float D = AB.dot(tnorm);
+		float D = v0.dot(tnorm);
 
 		//if the ray and plane are parallel, no intersection
-		if (tnorm.dot(ray.direction) == 0) continue;
+		if (tnorm.dot(ray.direction) == 0) continue; cout << "ray and plane parallel" << endl;
 
 		//if the object is backwards facing, we don't want to show it
 		if (tnorm.dot(ray.direction) > 0) tnorm.negate();
 		
 		//find t in ray equation p + td
-		float t = -(tnorm.dot(ray.position) + D) / tnorm.dot(ray.direction);
+		float t = (tnorm.dot(ray.position) + D) / tnorm.dot(ray.direction);
 
 		//check if triangle is behind ray
-		if (t < 0) continue;
+		if (t < 0) continue; cout << "triangle behind ray" << endl;
 
 
 		//define plane intersection location
@@ -152,7 +152,7 @@ void PolyMesh::intersection(Ray ray, Hit &hit)
 		
 		if (tnorm.dot(r0) > 0 && tnorm.dot(r1) > 0 && tnorm.dot(r2) > 0)
 		{
-			
+			cout << "inside triangle!" << endl;
 			hit.flag = true;
 			hit.t = t;
 			hit.what = this;

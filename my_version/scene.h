@@ -20,7 +20,8 @@ public:
 	}
 
 
-	vector<float> get_pixel(Ray ray);
+	vector<float> get_pixel(Ray &ray);
 
 
 };
+

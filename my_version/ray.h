@@ -5,7 +5,7 @@
  * Do what you like with this code as long as you retain this comment.
  */
 
-// Ray is a class to store and maniplulate 3D rays.
+ // Ray is a class to store and maniplulate 3D rays.
 
 #pragma once
 
@@ -20,10 +20,11 @@ public:
 	Ray()
 	{
 	}
-
+	
 	Ray(Vector p, Vector d)
 	{
 		position = p;
 		direction = d;
 	}
 };
+

@@ -9,33 +9,33 @@
 
 using namespace std;
 
-vector<float> Scene::get_pixel(Ray ray)
+vector<float> Scene::get_pixel(Ray &ray)
 {
-	
+
 	Vector colour = Vector();
 	Hit closest;
 	closest.t = FLT_MAX;
 	Object* object = objects;
-	
-	while(object!=0)
+
+	while (object != 0)
 	{
 		Hit hit;
 		object->intersection(ray, hit);
 		if (hit.flag)
 		{
-			cout << "hello" << endl;
+
 			if (hit.t < closest.t && hit.t > 0.01)
 			{
 				closest = hit;
 				cout << closest.t << " " << hit.t << endl;
-			
+
 			}
-			
-		}	
+
+		}
 		object = object->next;
 	}
-	
-	
+
+
 
 	if (closest.flag && closest.t != FLT_MAX)
 	{
@@ -47,14 +47,15 @@ vector<float> Scene::get_pixel(Ray ray)
 		colour.y = (colour.y > 255) ? 255 : (colour.y < 0) ? 0 : colour.y;
 		colour.z = (colour.x > 255) ? 255 : (colour.z < 0) ? 0 : colour.z;
 		cout << "hit " << closest.t << endl;
-		
-		vector<float> stuff{ colour.x,colour.y,colour.z, t};
+
+		vector<float> stuff{ colour.x,colour.y,colour.z, t };
 		return stuff;
 	}
 	//cout << closest.flag << " " << closest.t << endl;
-	vector<float> miss{ 0,0,0,0};
+	vector<float> miss{ 0,0,0,0 };
 	//cout << "miss" << endl;
 	return miss;
 
 }
+
 

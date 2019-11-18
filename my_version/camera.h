@@ -12,7 +12,7 @@ public:
 	float focal_length;
 	Vector w; //look direction
 	Vector v; //taken from up direction
-	Vector u;  
+	Vector u;
 	float image_h;
 	float image_w;
 	float reso_h;
@@ -27,9 +27,12 @@ public:
 		look.negate();
 		focal_p = fp;
 		focal_length = fl;
-		w = look;
-		u = w.cross(up,u);
-		v = u.cross(w,v);
+		w = focal_p - look;
+		w.normalise();
+		u = w.cross(up, u);
+		u.normalise();
+		v = u.cross(w, v);
+		v.normalise();
 		image_h = ih;
 		image_w = iw;
 		reso_h = rh;
@@ -40,7 +43,7 @@ public:
 		top_left = fp + (w*fl) - (u*(iw / 2)) + (v*(ih / 2));
 	}
 
-	//deconstructor 
+	//deconstructor
 	~Camera() {};
 
 	//method to calculate ray to pixel (i,j) from camera 

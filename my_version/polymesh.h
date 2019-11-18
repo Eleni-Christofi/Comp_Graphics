@@ -1,4 +1,4 @@
-/***************************************************************************
+/***********************;****************************************************
  *
  * krt - Kens Raytracer - Coursework Edition. (C) Copyright 1997-2019.
  *
@@ -10,6 +10,7 @@
 #include "vertex.h"
 #include "transform.h"
 #include "object.h"
+
 
 typedef int TriangleIndex[3];
 
@@ -27,3 +28,4 @@ public:
 	
 	void intersection(Ray ray, Hit &hit);
 };
+

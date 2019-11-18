@@ -11,17 +11,10 @@
 #include "object.h"
 
 class Sphere : public Object {
-	Vertex centre;
+	Vertex center;
 	float  radius;
 public:
-	Sphere(Vertex c, float r) 
-	{
-		centre = c; 
-		radius = r;
-	}
+	Sphere(Vertex c, float r);
 
-	void intersection(Ray ray, Hit &hit)
-	{
-		
-	}
+	void intersection(Ray ray, Hit &hit) override;
 };
