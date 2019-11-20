@@ -28,6 +28,11 @@ public:
 		y = 0.0f;
 		z = 0.0f;
 	}
+	
+	float norm()
+	{
+		return (x*x + y * y + z * z);
+	}
 
 	void normalise()
 	{

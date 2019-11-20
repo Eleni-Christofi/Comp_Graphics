@@ -17,10 +17,13 @@ public:
 
 	Object *next;
 	Vector colour;
+	Vector albedo;
 
 	Object()
 	{
 		next = (Object *)0;
+		colour = Vector(1, 1, 1);
+		albedo = Vector(0.18, 0.18, 0.18);
 	}
 	
 	virtual void intersection(Ray ray, Hit &hit)

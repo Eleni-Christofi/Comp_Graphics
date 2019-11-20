@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
   for (int i = 0; i< pm->triangle_count; i += 1)
   {
     // The following lines project the point onto the 2D image from 3D space.
-    float x0 = (pm->vertex[pm->triangle[i][0]].x/pm->vertex[pm->triangle[i][0]].z)*2000.0 + 1024.0;
-    float y0 = (pm->vertex[pm->triangle[i][0]].y/pm->vertex[pm->triangle[i][0]].z)*-2000.0 + 1024.0;
-    float x1 = (pm->vertex[pm->triangle[i][1]].x/pm->vertex[pm->triangle[i][1]].z)*2000.0 + 1024.0;
-    float y1 = (pm->vertex[pm->triangle[i][1]].y/pm->vertex[pm->triangle[i][1]].z)*-2000.0 + 1024.0;
-    float x2 = (pm->vertex[pm->triangle[i][2]].x/pm->vertex[pm->triangle[i][2]].z)*2000.0 + 1024.0;
-    float y2 = (pm->vertex[pm->triangle[i][2]].y/pm->vertex[pm->triangle[i][2]].z)*-2000.0 + 1024.0;
+    float x0 = (pm->vertex[pm->triangleV[i][0]].x/pm->vertex[pm->triangleV[i][0]].z)*2000.0 + 1024.0;
+    float y0 = (pm->vertex[pm->triangleV[i][0]].y/pm->vertex[pm->triangleV[i][0]].z)*-2000.0 + 1024.0;
+    float x1 = (pm->vertex[pm->triangleV[i][1]].x/pm->vertex[pm->triangleV[i][1]].z)*2000.0 + 1024.0;
+    float y1 = (pm->vertex[pm->triangleV[i][1]].y/pm->vertex[pm->triangleV[i][1]].z)*-2000.0 + 1024.0;
+    float x2 = (pm->vertex[pm->triangleV[i][2]].x/pm->vertex[pm->triangleV[i][2]].z)*2000.0 + 1024.0;
+    float y2 = (pm->vertex[pm->triangleV[i][2]].y/pm->vertex[pm->triangleV[i][2]].z)*-2000.0 + 1024.0;
 
     // then draw the three edges.
     draw_line(fb, (int)x0, (int)y0, (int)x1, (int)y1);
