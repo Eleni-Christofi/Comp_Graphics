@@ -47,8 +47,6 @@ int FrameBuffer::plotPixel(int x, int y, float red, float green, float blue)
 		return -1;
 	}
 
-	if ((red > 1.0f) || (red < 0.0f)) cerr << "out of range\n";
-
 	this->framebuffer[y * this->width + x].red = red;
 	this->framebuffer[y * this->width + x].green = green;
 	this->framebuffer[y * this->width + x].blue = blue;
@@ -150,12 +148,8 @@ int FrameBuffer::writeDepthFile(char *filename)
 		if (this->framebuffer[i].depth < min) min = this->framebuffer[i].depth;
 	}
 
-	cerr << "Min/max" << min << "/" << max << endl;
-
 	float diff = max - min;
 	if (diff == 0.0f) diff = 1.0f;
-
-	cerr << "Min/max/diff" << min << "/" << max << "/" << diff << endl;
 
 	outfile << "P6\n";
 	outfile << this->width << " " << this->height << "\n255\n";

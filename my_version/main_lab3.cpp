@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
 	//Put some lights in
 	Vector colour = Vector(1, 1, 1);
 	float intensity = 1;
-	Vector p1 = Vector(0, 0, 0);
+	Vector p1 = Vector(5, 5, 0);
 	PointLight* l1 = new PointLight(colour, intensity, p1);
 	scene.lights.push_back(l1);
 
 	// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
-	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 4.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
 	PolyMesh pm ((char *)"teapot.ply", transform);
@@ -88,8 +88,9 @@ int main(int argc, char *argv[])
 			pixel_info = scene.get_pixel(ray);
 			//cout << "got pixel info" << endl;
 			fb->plotPixel(i, j, pixel_info[0], pixel_info[1], pixel_info[2]);
-			fb->plotDepth(i, j, pixel_info[3]);
+			//fb->plotDepth(i, j, pixel_info[3]);
 
+			//cout << pixel_info[0] << pixel_info[1] << pixel_info[2] << endl;
 
 
 

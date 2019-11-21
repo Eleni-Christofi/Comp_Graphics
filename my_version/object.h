@@ -17,13 +17,15 @@ public:
 
 	Object *next;
 	Vector colour;
-	Vector albedo;
+	float kd;
+	float ks;
 
 	Object()
 	{
 		next = (Object *)0;
-		colour = Vector(1, 1, 1);
-		albedo = Vector(0.18, 0.18, 0.18);
+		colour = Vector(255, 255, 255);
+		kd = 0.5;
+		ks = 0.8;
 	}
 	
 	virtual void intersection(Ray ray, Hit &hit)

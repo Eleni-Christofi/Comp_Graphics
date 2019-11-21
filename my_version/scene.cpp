@@ -17,6 +17,7 @@ vector<float> Scene::get_pixel(Ray &ray)
 	Hit closest;
 	closest.t = FLT_MAX;
 	Object* object = objects;
+	float ka = 0.4;
 
 	//finding the closest intersection point 
 	while (object != 0)
@@ -43,7 +44,7 @@ vector<float> Scene::get_pixel(Ray &ray)
 	//if we have actually hit something
 	if (closest.flag && closest.t != FLT_MAX)
 	{
-
+		//cout << closest.what->kd << endl;
 
 		//finding out if the point is lit or in shadow
 		Ray shad_ray;
@@ -76,27 +77,49 @@ vector<float> Scene::get_pixel(Ray &ray)
 
 
 		//calculate cumulative light score
-		Vector light = ambient;
 		for (int i{ 0 }; i < lights.size(); i++)
 		{
-			light = light + lights[i]->colour*lights[i]->intensity*max(0.0f, closest.normal.dot(lights[i]->get_direction(closest.position)); //* is_shad[i];
+			//light = light + lights[i]->colour*lights[i]->intensity*max(0.0f, closest.normal.dot(lights[i]->get_direction(closest.position)); //* is_shad[i];
+			//closest.normal.negate();
+			Vector light_direction = lights[i]->get_direction(closest.position);
+
+			float diffuse_component = light_direction.dot(closest.normal);
+			if (diffuse_component < 0) {
+				continue;
+			}
+
+			colour.x += closest.what->colour.x * diffuse_component * closest.what->kd;
+			colour.y += closest.what->colour.y * diffuse_component * closest.what->kd;
+			colour.z += closest.what->colour.z * diffuse_component * closest.what->kd;
+			
+			Vector reflection = Vector();
+			closest.normal.reflection(light_direction, reflection);
+			float specular_component = reflection.dot(ray.direction);
+			if (specular_component < 0) specular_component = 0;
+
+			colour.x += closest.what->colour.x * pow(specular_component, 50) * closest.what->ks;
+			colour.y += closest.what->colour.y * pow(specular_component, 50) * closest.what->ks;
+			colour.z += closest.what->colour.z * pow(specular_component, 50) * closest.what->ks;
+			//cout << colour.x << colour.y << colour.z << endl;
 		}
 
 		//calculate colour & clamp values
-		colour.x = closest.what->colour.x * closest.what->albedo.x / M_PI * light.x;
-		colour.y = closest.what->colour.y * closest.what->albedo.y / M_PI * light.y;
-		colour.z = closest.what->colour.z * closest.what->albedo.z / M_PI * light.z;
+		colour.x += closest.what->colour.x * ka;
+		colour.y += closest.what->colour.y * ka;
+		colour.z += closest.what->colour.z * ka;
+
+		//cout << colour.x << colour.y << colour.z << endl;
 		
-		colour.x = (colour.x > 1) ? 1 : (colour.x < 0) ? 0 : colour.x;
-		colour.y = (colour.y > 1) ? 1 : (colour.y < 0) ? 0 : colour.y;
-		colour.z = (colour.x > 1) ? 1 : (colour.z < 0) ? 0 : colour.z;
+		// colour.x = (colour.x > 1) ? 1 : (colour.x < 0) ? 0 : colour.x;
+		// colour.y = (colour.y > 1) ? 1 : (colour.y < 0) ? 0 : colour.y;
+		// colour.z = (colour.x > 1) ? 1 : (colour.z < 0) ? 0 : colour.z;
 		
 		//calculate depth & clamp 
 		float t = 1 / closest.t;
 		t = (t > 255) ? 255 : (t < 0.01) ? 0 : t;
 
 		
-		cout << "hit " << closest.t << endl;
+		//cout << "hit " << closest.t << endl;
 
 		//return vector containing colour and depth
 		vector<float> stuff{ colour.x,colour.y,colour.z, t };

@@ -158,6 +158,7 @@ void PolyMesh::intersection(Ray ray, Hit &hit)
 			hit.what = this;
 			hit.position = phit;
 			hit.normal = tnorm;
+			hit.normal.normalise();
 			break;
 		}
 		
