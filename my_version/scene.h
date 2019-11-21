@@ -9,7 +9,7 @@ using namespace std;
 class Scene
 {
 public:
-	Vector ambient_col;
+	Vector ambient;
 	Object *objects;
 	vector<Light*> lights;
 
@@ -17,10 +17,10 @@ public:
 	Scene()
 	{
 		objects = 0;
-		lights = 0;
-		ambient_col.x = 0.2;
-		ambient_col.y = 0.2;
-		ambient_col.z = 0.2;
+		lights = vector<Light*>();
+		ambient.x = 0.2;
+		ambient.y = 0.2;
+		ambient.z = 0.2;
 	}
 
 	//get value of colour and depth for each pixel 

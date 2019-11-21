@@ -6,11 +6,11 @@
 class Light
 {
 public:
-	Light(const Transform &l2w) : lightToWorld(l2w) {}
 	virtual ~Light() {}
-	Matrix44f lightToWorld;
 	Vector colour;
-	float intensity
+	float intensity;
+	virtual Vector get_direction(Vector &p){}
+
 };
 
 class PointLight : public Light
@@ -18,20 +18,26 @@ class PointLight : public Light
 public:
 	Vector position;
 
-	PointLight(const Transform &l2w, const Vector &c = Vector(1, 1, 1), const float &i = 1) : Light(l2w)
+	PointLight(Vector c, float i, Vector p)
 	{
 		this->colour = c;
 		this->intensity = i;
-		l2w.apply(Vector(0, 0, 0), position);
+		this->position = p;
 	}
 
-	Vector get_shading(Vector &p, Vector &lightdir, Vector &lightint, float &distance) 
+	Vector get_direction(Vector &p) 
 	{
-		lightdir = position - p;
-		float len = lightdir.norm();
-		distance = sqrt(len);
-		lightdir.normalise();
-		lightint = intensity * colour / (4 * M_PI*len);
+		Vector d = position - p;
+		d.normalise();
+
+		return d;
+	}
+
+	Vector get_intensity(Vector &p)
+	{
+		float len = (position - p).norm();
+		Vector lightint = colour * intensity/ (4 * M_PI*len);
+		return lightint;
 	}
 };
 
@@ -40,11 +46,16 @@ class DistantLight : public Light
 public:
 	Vector direction;
 
-	DistantLight(const Transform &l2w, const Vector &c = Vector(1, 1, 1), const float &i = 1) : Light(l2w)
+	DistantLight(Vector c, float i, Vector d)
 	{
 		this->colour = c;
 		this->intensity = i;
-		l2w.apply(Vector(0, 0, 0), direction);
-		direction.normalise();
+		d.normalise();
+		this->direction = d;
+	}
+
+	Vector get_direction(Vector &p)
+	{
+		return direction;
 	}
 };

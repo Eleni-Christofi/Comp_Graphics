@@ -38,8 +38,14 @@ int main(int argc, char *argv[])
 	Scene scene = Scene();
 	cout << "empty scene set up" << endl;
 
+	//Put some lights in
+	Vector colour = Vector(1, 1, 1);
+	float intensity = 1;
+	Vector p1 = Vector(0, 0, 0);
+	PointLight* l1 = new PointLight(colour, intensity, p1);
+	scene.lights.push_back(l1);
 
-	//// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
+	// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
 	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
@@ -90,8 +96,8 @@ int main(int argc, char *argv[])
 		}
 	}
 	cout << "Writing files..." << endl;
-	//	fb->writeRGBFile((char *)"test.ppm");
-	fb->writeDepthFile((char *)"test_depth.ppm");
+	fb->writeRGBFile((char *)"test.ppm");
+
 }
 
 

@@ -90,5 +90,8 @@ public:
 		return Vector(x - v.x, y - v.y, z - v.z);
 	}
 
-
+	Vector operator / (float n)
+	{
+		return Vector(x / n, y / n, z / n);
+	}
 };

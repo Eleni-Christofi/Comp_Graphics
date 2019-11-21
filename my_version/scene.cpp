@@ -12,7 +12,7 @@
 using namespace std;
 
 vector<float> Scene::get_pixel(Ray &ray)
-
+{
 	Vector colour = Vector();
 	Hit closest;
 	closest.t = FLT_MAX;
@@ -47,36 +47,46 @@ vector<float> Scene::get_pixel(Ray &ray)
 
 		//finding out if the point is lit or in shadow
 		Ray shad_ray;
-		float is_shad{ 1 };
-		//cycle through all objects in scene
+		/**cycle through all objects in scene
 		while (object != 0)
 		{
 			Hit hit;
 			//cycle through all lights in scene
 			for (int i{ 0 }; i < lights.size(); i++)
 			{
-
+				vector<float> is_shad(lights.size);
 				shad_ray.position = closest.position;
-				shad_ray.direction = lights[i].position - closest.position;
+				shad_ray.direction = lights[i]->position - closest.position;
 
 				//object intersection of ray from point of intersection to light
 				object->intersection(ray, hit);
 				//making sure to only check for intersections between object and light source 
-				t = (lights[i].position - hit.position).norm();
+				float t = (lights[i] -> position - hit.position).norm();
 				t = sqrt(t);
 				if (!hit.flag)
 				{
 					if (hit.t < t && hit.t > 0.01)
 					{
-						is_shad = 0.1;
+						is_shad[i] = 0.1;
 					}
 				}
 			}
 		}
+		*/
 
+
+		//calculate cumulative light score
+		Vector light = ambient;
+		for (int i{ 0 }; i < lights.size(); i++)
+		{
+			light = light + lights[i]->colour*lights[i]->intensity*max(0.0f, closest.normal.dot(lights[i]->get_direction(closest.position)); //* is_shad[i];
+		}
 
 		//calculate colour & clamp values
-		colour = closest.what->colour * closest.what->albedo / M_PI * lights->intensity * lights->colour * max(0.f, closest.normal.dot(L)*is_shad;
+		colour.x = closest.what->colour.x * closest.what->albedo.x / M_PI * light.x;
+		colour.y = closest.what->colour.y * closest.what->albedo.y / M_PI * light.y;
+		colour.z = closest.what->colour.z * closest.what->albedo.z / M_PI * light.z;
+		
 		colour.x = (colour.x > 1) ? 1 : (colour.x < 0) ? 0 : colour.x;
 		colour.y = (colour.y > 1) ? 1 : (colour.y < 0) ? 0 : colour.y;
 		colour.z = (colour.x > 1) ? 1 : (colour.z < 0) ? 0 : colour.z;
