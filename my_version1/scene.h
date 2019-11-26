@@ -28,7 +28,7 @@ public:
 
 	Hit closest_intersection(Ray ray);
 
-	Vector specular_diffuse(Ray ray, Hit closest);
+	Vector add_lighting(Ray ray, Hit closest);
 
 	Vector do_reflections(Vector reflection, int d, Hit closest);
 
