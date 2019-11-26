@@ -30,7 +30,7 @@ public:
 
 	Vector specular_diffuse(Hit closest);
 
-	Vector do_reflections(Vector reflection, int d)
+	Vector do_reflections(Vector reflection, int d, Hit closest)
 
 
 

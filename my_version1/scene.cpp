@@ -141,32 +141,50 @@ Vector Scene::specular_diffuse(Hit closest)
 		colour.y += closest.what->colour.y * pow(specular_component, 50) * closest.what->ks;
 		colour.z += closest.what->colour.z * pow(specular_component, 50) * closest.what->ks;
 
+		//add reflection
+		colour += do_reflections(reflection, depth, closest);
+
 		
 
 	}
 	return colour;
 }
 
-Vector Scene::do_reflections(Vector reflection, int d)
+Vector Scene::do_reflections(Vector reflection, int d, Hit closest)
 {
-	if (d>= 0 || closest.what->kr > 0)
+	float r = closest.what->kr;
+	Vector refl_component = Vector();
+	if (d>= 0 || r > 0)
 	{
 		Object* refl_obj = objects;
 		Hit refl_hit = Hit();
+		
 		d = depth;
 		while (refl_obj != 0)
 		{
 			refl_obj->intersection(reflection, refl_hit);
 			if (refl_hit.flag)
 			{
-				d -= 1;
-				new_reflection = refl_hit.normal.reflection(reflection, new_reflection);
 				cout << "reflection" << endl;
-				do_reflections(new_reflection, d);
+				switch (d)
+					case 0: 
+						refl_component += refl_hit.what->colour *  r;
+						break;
+					case 1:
+					{
+						d -= 1;
+						new_reflection = refl_hit.normal.reflection(reflection, new_reflection);
+						refl_component += kr * do_reflections(new_reflection, d);
+					}
+						break;
+					default: 
+						cout << "something went wrong in reflection";
+						break;
 
 			}
 			refl_object = refl_object->next;
 		}
 	}
+	return refl_component;
 }
 
