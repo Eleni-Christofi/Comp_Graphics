@@ -22,8 +22,8 @@ vector<float> Scene::get_pixel(Ray &ray)
 	{
 		Vector colour = Vector();
 
-		//add specular & diffuse components/detect shadows
-		colour = specular_diffuse(ray, closest);
+		//add specular, diffuse, reflections (ignore if in shadow)
+		colour = add_lighting(ray, closest);
 
 
 		//add ambient light
