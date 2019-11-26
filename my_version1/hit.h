@@ -23,5 +23,3 @@ public:
 	Vector position;
 	Vector normal;
 };
-
-{}

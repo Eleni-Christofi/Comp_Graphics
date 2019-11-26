@@ -26,11 +26,11 @@ public:
 	//get value of colour and depth for each pixel 
 	vector<float> get_pixel(Ray &ray);
 
-	hit closest_intersection(Ray ray);
+	Hit closest_intersection(Ray ray);
 
-	Vector specular_diffuse(Hit closest);
+	Vector specular_diffuse(Ray ray, Hit closest);
 
-	Vector do_reflections(Vector reflection, int d, Hit closest)
+	Vector do_reflections(Vector reflection, int d, Hit closest);
 
 
 

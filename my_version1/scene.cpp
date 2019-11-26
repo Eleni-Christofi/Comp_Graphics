@@ -23,7 +23,7 @@ vector<float> Scene::get_pixel(Ray &ray)
 		Vector colour = Vector();
 
 		//add specular & diffuse components/detect shadows
-		colour = specular_diffuse(closest);
+		colour = specular_diffuse(ray, closest);
 
 
 		//add ambient light
@@ -77,7 +77,7 @@ Hit Scene::closest_intersection(Ray ray)
 	return closest;
 }
 
-Vector Scene::specular_diffuse(Hit closest)
+Vector Scene::specular_diffuse(Ray ray, Hit closest)
 {
 	Vector colour = Vector();
 	//calculate cumulative light score
@@ -142,7 +142,7 @@ Vector Scene::specular_diffuse(Hit closest)
 		colour.z += closest.what->colour.z * pow(specular_component, 50) * closest.what->ks;
 
 		//add reflection
-		colour += do_reflections(reflection, depth, closest);
+		colour = colour + do_reflections(reflection, depth, closest);
 
 		
 
@@ -153,7 +153,11 @@ Vector Scene::specular_diffuse(Hit closest)
 Vector Scene::do_reflections(Vector reflection, int d, Hit closest)
 {
 	float r = closest.what->kr;
+	Ray reflect = Ray();
+	reflect.position = closest.position;
+	reflect.direction = reflection;
 	Vector refl_component = Vector();
+
 	if (d>= 0 || r > 0)
 	{
 		Object* refl_obj = objects;
@@ -162,27 +166,29 @@ Vector Scene::do_reflections(Vector reflection, int d, Hit closest)
 		d = depth;
 		while (refl_obj != 0)
 		{
-			refl_obj->intersection(reflection, refl_hit);
+			refl_obj->intersection(reflect, refl_hit);
 			if (refl_hit.flag)
 			{
 				cout << "reflection" << endl;
 				switch (d)
-					case 0: 
-						refl_component += refl_hit.what->colour *  r;
-						break;
-					case 1:
+				{
+				case 0:
+					refl_component = refl_component + refl_hit.what->colour *  r;
+					break;
+				default:
 					{
-						d -= 1;
-						new_reflection = refl_hit.normal.reflection(reflection, new_reflection);
-						refl_component += kr * do_reflections(new_reflection, d);
+					Vector new_reflection = Vector();
+					d -= 1;
+					refl_hit.normal.reflection(reflection, new_reflection);
+					refl_component = refl_component + do_reflections(new_reflection, d,closest)*r;
 					}
-						break;
-					default: 
-						cout << "something went wrong in reflection";
-						break;
+					break;
+			
+				}
+					
 
 			}
-			refl_object = refl_object->next;
+			refl_obj = refl_obj->next;
 		}
 	}
 	return refl_component;
