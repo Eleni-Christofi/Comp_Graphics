@@ -77,7 +77,7 @@ Hit Scene::closest_intersection(Ray ray)
 	return closest;
 }
 
-Vector Scene::specular_diffuse(Ray ray, Hit closest)
+Vector Scene::add_lighting(Ray ray, Hit closest)
 {
 	Vector colour = Vector();
 	//calculate cumulative light score
