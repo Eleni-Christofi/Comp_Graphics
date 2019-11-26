@@ -74,6 +74,7 @@ Hit Scene::closest_intersection(Ray ray)
 		//move to the next object in the scene
 		object = object->next;
 	}
+	return closest;
 }
 
 Vector Scene::specular_diffuse(Hit closest)
@@ -140,8 +141,32 @@ Vector Scene::specular_diffuse(Hit closest)
 		colour.y += closest.what->colour.y * pow(specular_component, 50) * closest.what->ks;
 		colour.z += closest.what->colour.z * pow(specular_component, 50) * closest.what->ks;
 
+		
+
 	}
 	return colour;
 }
 
+Vector Scene::do_reflections(Vector reflection, int d)
+{
+	if (d< 0 || closest.what->kr <= 0)
+	{
+		Object* refl_obj = objects;
+		Hit refl_hit = Hit();
+		d = depth;
+		while (refl_obj != 0)
+		{
+			refl_obj->intersection(reflection, refl_hit);
+			if (refl_hit.flag)
+			{
+				d -= 1;
+				new_reflection = refl_hit.normal.reflection(reflection, new_reflection);
+				cout << "reflection" << endl;
+				do_reflections(new_reflection, d);
+
+			}
+			refl_object = refl_object->next;
+		}
+	}
+}
 

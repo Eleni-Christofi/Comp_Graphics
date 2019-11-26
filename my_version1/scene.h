@@ -13,6 +13,7 @@ public:
 	float ka;
 	Object *objects;
 	vector<Light*> lights;
+	int depth;
 
 	//constructor (no objects, no lights, ambient light at 0.2)
 	Scene()
@@ -27,7 +28,11 @@ public:
 
 	hit closest_intersection(Ray ray);
 
-	Vector specular_diffuse(Hit closest)
+	Vector specular_diffuse(Hit closest);
+
+	Vector do_reflections(Vector reflection, int d)
+
+
 
 };
 

@@ -19,6 +19,7 @@ public:
 	Vector colour;
 	float kd;
 	float ks;
+	float kr;
 
 	Object()
 	{
