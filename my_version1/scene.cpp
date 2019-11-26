@@ -149,7 +149,7 @@ Vector Scene::specular_diffuse(Hit closest)
 
 Vector Scene::do_reflections(Vector reflection, int d)
 {
-	if (d< 0 || closest.what->kr <= 0)
+	if (d>= 0 || closest.what->kr > 0)
 	{
 		Object* refl_obj = objects;
 		Hit refl_hit = Hit();
