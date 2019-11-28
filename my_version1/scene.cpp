@@ -143,7 +143,6 @@ Vector Scene::add_lighting(Ray ray, Hit closest)
 
 		//add reflection
 		colour = colour + do_reflections(reflection, depth, closest);
-
 		
 
 	}
@@ -154,7 +153,7 @@ Vector Scene::do_reflections(Vector reflection, int d, Hit closest)
 {
 	float r = closest.what->kr;
 	Ray reflect = Ray();
-	reflect.position = closest.position;
+	reflect.position = closest.position + reflection*0.001;
 	reflect.direction = reflection;
 	Vector refl_component = Vector();
 
@@ -162,14 +161,11 @@ Vector Scene::do_reflections(Vector reflection, int d, Hit closest)
 	{
 		Object* refl_obj = objects;
 		Hit refl_hit = Hit();
-		
-		d = depth;
 		while (refl_obj != 0)
 		{
 			refl_obj->intersection(reflect, refl_hit);
 			if (refl_hit.flag)
 			{
-				cout << "reflection" << endl;
 				switch (d)
 				{
 				case 0:
@@ -178,9 +174,8 @@ Vector Scene::do_reflections(Vector reflection, int d, Hit closest)
 				default:
 					{
 					Vector new_reflection = Vector();
-					d -= 1;
 					refl_hit.normal.reflection(reflection, new_reflection);
-					refl_component = refl_component + do_reflections(new_reflection, d,closest)*r;
+					refl_component = refl_component + do_reflections(new_reflection, d-1,closest)*r;
 					}
 					break;
 			

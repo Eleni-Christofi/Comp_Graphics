@@ -19,8 +19,8 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	// Create a framebuffer
-	int pixel_width = 256;
-	int pixel_height = 256;
+	int pixel_width = 128;
+	int pixel_height = 128;
 	FrameBuffer *fb = new FrameBuffer(pixel_width, pixel_height);
 
 	//Setting up a camera
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 7.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
-	PolyMesh pm ((char *)"teapot.ply", transform);
+	PolyMesh pm ((char *)"teapot_smaller.ply", transform);
 	pm.colour = Vector(255, 0, 0);
 
 	cout << "teapot loaded" << endl;

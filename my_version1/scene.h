@@ -21,6 +21,7 @@ public:
 		objects = 0;
 		lights = vector<Light*>();
 		ka = 0.4;
+		depth = 2;
 	}
 
 	//get value of colour and depth for each pixel 

@@ -27,6 +27,7 @@ public:
 		colour = Vector(255, 255, 255);
 		kd = 0.5;
 		ks = 0.8;
+		kr = 0.6;
 	}
 	
 	virtual void intersection(Ray ray, Hit &hit)
