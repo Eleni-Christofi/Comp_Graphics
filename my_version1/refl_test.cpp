@@ -52,26 +52,29 @@ int main(int argc, char *argv[])
 	// load in the teapot
 	PolyMesh pm((char *)"teapot_smaller.ply", transform);
 	pm.colour = Vector(255, 0, 0);
-
-	cout << "teapot loaded" << endl;
-
-	//add teapot to scene
-	//pm.next = scene.objects;
-	//scene.objects = &pm;
+	pm.kt = 0.5;
+	pm.type = 2;
 
 	cout << "teapot added to scene" << endl;
 
 
-	Sphere sphere = Sphere(Vertex(10, 0, 50 ), 5);
+	Sphere sphere = Sphere(Vertex(5, 0, 10 ), 5);
 	sphere.colour = Vector(255, 255, 255);
+	sphere.type = 1;
 	sphere.next = &pm;
 	scene.objects = &sphere;
+
+	
+
+
+	
 
 	cout << "sphere added" << endl;
 
 	//add plane as the 'floor'
 	Plane floor = Plane(Vector(0, 1, 0), Vector(0, -4, 0));
 	floor.colour = Vector(50, 50, 50);
+	floor.type = 0;
 	pm.next = &floor;
 
 	cout << "floor added" << endl;
@@ -79,7 +82,16 @@ int main(int argc, char *argv[])
 	//add plane as backdrop
 	Plane background = Plane(Vector(0, 0, -1), Vector(0, 0, 250));
 	background.colour = Vector(125, 0, 125);
+	background.type = 0;
 	floor.next = &background;
+
+	cout << "backdrop added" << endl;
+
+	Sphere sphere2 = Sphere(Vertex(5, 0, 2), 1);
+	sphere2.colour = Vector(255, 255, 255);
+	sphere2.type = 0;
+	background.next = &sphere2;
+
 
 
 
