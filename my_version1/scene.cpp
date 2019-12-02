@@ -86,7 +86,6 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour, int t
 			//if we are in shadow and on the correct side of the light, do not add specular and diffuse
 			if (in_shad(closest, lights[i]))
 			{
-				cout << "in shadow" << endl;
 				continue;
 			}
 

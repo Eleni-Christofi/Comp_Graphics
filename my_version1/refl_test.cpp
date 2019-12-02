@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 	cout << "sphere added" << endl;
 
 	//add plane as the 'floor'
-	Plane floor = Plane(Vector(0, 2, 0), Vector(0, -4, 0));
+	Plane floor = Plane(Vector(0, 1, 0), Vector(0, -2, 0));
 	floor.colour = Vector(0, 0, 0);
 	floor.type = 1;
 	floor.kr = 1;
@@ -85,7 +85,6 @@ int main(int argc, char *argv[])
 	Plane background = Plane(Vector(0, 0, -1), Vector(0, 0, 250));
 	background.colour = Vector(25,25,25);
 	background.type = 0;
-	background.kr = 1;
 	floor.next = &background;
 
 	cout << "backdrop added" << endl;
