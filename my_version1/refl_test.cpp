@@ -19,8 +19,8 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	// Create a framebuffer
-	int pixel_width = 256;
-	int pixel_height = 256;
+	int pixel_width = 128;
+	int pixel_height = 128;
 	FrameBuffer *fb = new FrameBuffer(pixel_width, pixel_height);
 
 	//Setting up a camera
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	cout << "camera set up" << endl;
 
 	//Set up the Scene object
-	Scene scene = Scene();
+	Scene scene = Scene(Vector(175,175,175),0.3,5);
 	cout << "empty scene set up" << endl;
 
 	//Put some lights in
@@ -51,16 +51,17 @@ int main(int argc, char *argv[])
 
 	// load in the teapot
 	PolyMesh pm((char *)"teapot_smaller.ply", transform);
-	pm.colour = Vector(255, 0, 0);
-	pm.kt = 0.5;
-	pm.type = 2;
+	pm.colour = Vector(255, 0, 255);
+	pm.type = 1;
+	pm.kr = 1;
 
 	cout << "teapot added to scene" << endl;
 
 
-	Sphere sphere = Sphere(Vertex(5, 0, 10 ), 5);
-	sphere.colour = Vector(255, 255, 255);
+	Sphere sphere = Sphere(Vertex(0, 3, 7), 1);
+	sphere.colour = Vector(0, 0, 255);
 	sphere.type = 1;
+	sphere.kr = 1;
 	sphere.next = &pm;
 	scene.objects = &sphere;
 
@@ -72,24 +73,26 @@ int main(int argc, char *argv[])
 	cout << "sphere added" << endl;
 
 	//add plane as the 'floor'
-	Plane floor = Plane(Vector(0, 1, 0), Vector(0, -4, 0));
-	floor.colour = Vector(50, 50, 50);
-	floor.type = 0;
+	Plane floor = Plane(Vector(0, 2, 0), Vector(0, -4, 0));
+	floor.colour = Vector(0, 0, 0);
+	floor.type = 1;
+	floor.kr = 1;
 	pm.next = &floor;
 
 	cout << "floor added" << endl;
 
 	//add plane as backdrop
 	Plane background = Plane(Vector(0, 0, -1), Vector(0, 0, 250));
-	background.colour = Vector(125, 0, 125);
-	background.type = 0;
+	background.colour = Vector(25,25,25);
+	background.type = 1;
+	background.kr = 1;
 	floor.next = &background;
 
 	cout << "backdrop added" << endl;
 
-	Sphere sphere2 = Sphere(Vertex(5, 0, 2), 1);
-	sphere2.colour = Vector(255, 255, 255);
-	sphere2.type = 0;
+	Sphere sphere2 = Sphere(Vertex(3, 1, 7), 1);
+	sphere2.colour = Vector(0, 255, 0);
+	sphere2.type = 1;
 	background.next = &sphere2;
 
 
@@ -109,7 +112,7 @@ int main(int argc, char *argv[])
 			//cout << "made pixel info" << endl;
 			ray = camera.make_ray(i, j);
 			//cout << "gotten ray" << endl;
-			pixel_info = scene.get_pixel(ray);
+			pixel_info = scene.get_pixel(ray,1);
 			//cout << "got pixel info" << endl;
 			fb->plotPixel(i, j, pixel_info[0], pixel_info[1], pixel_info[2]);
 			//fb->plotDepth(i, j, pixel_info[3]);

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-vector<float> Scene::get_pixel(Ray &ray)
+vector<float> Scene::get_pixel(Ray &ray, int depth)
 {
 	//find closest intersection point
 	Hit closest;
@@ -23,7 +23,7 @@ vector<float> Scene::get_pixel(Ray &ray)
 		Vector colour = Vector();
 
 		//add lighting effect (ignore if in shadow)
-		colour = add_lighting(ray, closest, 1);
+		colour = add_lighting(ray, closest, depth, colour);
 
 		//calculate depth & clamp 
 		float t = 1 / closest.t;
@@ -69,13 +69,12 @@ Hit Scene::closest_intersection(Ray ray)
 	return closest;
 }
 
-Vector Scene::add_lighting(Ray ray, Hit closest, int depth)
+Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour)
 {
-	
-	Vector colour = Vector();
+
 	if (depth < 0 || depth > max_depth)
 	{
-		cout << "depth not in range" << depth << endl;
+		//cout << "depth not in range" << depth << endl;
 		return colour;
 	}
 	if (closest.what->type == 0)
@@ -87,6 +86,7 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth)
 			//if we are in shadow and on the correct side of the light, do not add specular and diffuse
 			if (in_shad(closest, lights[i]))
 			{
+				cout << "in shadow" << endl;
 				continue;
 			}
 
@@ -123,20 +123,21 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth)
 	}
 	else if(closest.what->type == 1)
 	{
-		cout << "type = 1 adding reflection " << endl;
+		//cout << "type = 1 adding reflection " << endl;
 		Vector reflection = Vector();
-		closest.normal.reflection(ray.direction, reflection);
-		Ray reflect = Ray();
-		reflect.position = closest.position + reflection * 0.001;
-		reflect.direction = reflection;
-		Vector refl_col = add_lighting(reflect, closest, depth + 1);
+		reflection = reflect(ray.direction, closest);
+		Ray refl_ray = Ray();
+		refl_ray.position = closest.position + reflection * 0.001;
+		refl_ray.direction = reflection;
+		vector<float> recurse = get_pixel(refl_ray, depth + 1);
+		Vector refl_col = Vector(recurse[1], recurse[2], recurse[3]);
 		colour = colour + refl_col * closest.what->kr;
-		colour = colour + ambient;
-		cout << colour.x << " " << colour.y << " " << colour.z << endl;
+		closest.what->type = 0;
+		colour = colour + add_lighting(ray, closest, depth, colour);
 		return colour;
 
 	}
-	else
+	/*else
 	{
 		cout << "type =" << closest.what->type << " adding reflection/refraction" << endl;
 		if (depth < max_depth && depth > 0)
@@ -163,8 +164,10 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth)
 			cout << colour.x << " " << colour.y << " " << colour.z << endl;
 			return colour;
 		}
+		
 
 	}
+	*/
 	cout << "no lighting, depth is " << depth << endl;
 	cout << colour.x << " " << colour.y << " " << colour.z << endl;
 	return colour;
@@ -199,6 +202,13 @@ bool Scene::in_shad(Hit closest, Light* light)
 		shad_obj = shad_obj->next;
 	}
 	return false;
+}
+
+Vector Scene::reflect(Vector dir, Hit closest)
+{
+	Vector new_dir;
+	new_dir = dir - closest.normal * 2 * closest.normal.dot(dir);
+	return new_dir;
 }
 
 Vector Scene::refract(Vector dir, Hit closest)

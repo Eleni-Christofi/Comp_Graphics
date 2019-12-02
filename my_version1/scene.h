@@ -31,13 +31,15 @@ public:
 	}
 
 	//get value of colour and depth for each pixel 
-	vector<float> get_pixel(Ray &ray);
+	vector<float> get_pixel(Ray &ray, int depth);
 
 	Hit closest_intersection(Ray ray);
 
-	Vector add_lighting(Ray ray, Hit closest, int d);
+	Vector add_lighting(Ray ray, Hit closest, int d, Vector colour);
 
 	bool in_shad(Hit closest, Light* light);
+
+	Vector reflect(Vector dir, Hit closest);
 
 	Vector refract(Vector dir, Hit closest);
 
