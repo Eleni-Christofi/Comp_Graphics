@@ -35,7 +35,7 @@ public:
 
 	Hit closest_intersection(Ray ray);
 
-	Vector add_lighting(Ray ray, Hit closest, int d, Vector colour);
+	Vector add_lighting(Ray ray, Hit closest, int d, Vector colour, int type);
 
 	bool in_shad(Hit closest, Light* light);
 

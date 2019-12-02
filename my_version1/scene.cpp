@@ -23,7 +23,7 @@ vector<float> Scene::get_pixel(Ray &ray, int depth)
 		Vector colour = Vector();
 
 		//add lighting effect (ignore if in shadow)
-		colour = add_lighting(ray, closest, depth, colour);
+		colour = add_lighting(ray, closest, depth, colour, closest.what-> type);
 
 		//calculate depth & clamp 
 		float t = 1 / closest.t;
@@ -69,7 +69,7 @@ Hit Scene::closest_intersection(Ray ray)
 	return closest;
 }
 
-Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour)
+Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour, int type)
 {
 
 	if (depth < 0 || depth > max_depth)
@@ -77,7 +77,7 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour)
 		//cout << "depth not in range" << depth << endl;
 		return colour;
 	}
-	if (closest.what->type == 0)
+	if (type == 0)
 	{
 		for (int i{ 0 }; i < lights.size(); i++)
 		{
@@ -121,7 +121,7 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour)
 		}
 		return colour;
 	}
-	else if(closest.what->type == 1)
+	else if(type == 1)
 	{
 		//cout << "type = 1 adding reflection " << endl;
 		Vector reflection = Vector();
@@ -132,8 +132,9 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour)
 		vector<float> recurse = get_pixel(refl_ray, depth + 1);
 		Vector refl_col = Vector(recurse[1], recurse[2], recurse[3]);
 		colour = colour + refl_col * closest.what->kr;
-		closest.what->type = 0;
-		colour = colour + add_lighting(ray, closest, depth, colour);
+		type = 0;
+		Vector spec_dif = add_lighting(ray, closest, depth, colour, type);
+		colour = colour + spec_dif;
 		return colour;
 
 	}

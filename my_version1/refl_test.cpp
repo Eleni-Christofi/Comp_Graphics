@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	cout << "camera set up" << endl;
 
 	//Set up the Scene object
-	Scene scene = Scene(Vector(175,175,175),0.3,5);
+	Scene scene = Scene(Vector(175,175,175),0.3,2);
 	cout << "empty scene set up" << endl;
 
 	//Put some lights in
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 	//add plane as backdrop
 	Plane background = Plane(Vector(0, 0, -1), Vector(0, 0, 250));
 	background.colour = Vector(25,25,25);
-	background.type = 1;
+	background.type = 0;
 	background.kr = 1;
 	floor.next = &background;
 
