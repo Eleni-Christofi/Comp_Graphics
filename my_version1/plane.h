@@ -22,7 +22,7 @@ public:
 		normal = n;
 		d = D;
 	}
-	
+
 	void intersection(Ray ray, Hit &hit)
 	{
 		//if the ray and plane are parallel, no intersection
@@ -40,7 +40,7 @@ public:
 
 		//define plane intersection location
 		Vector phit = ray.position + (ray.direction)*t;
-		
+
 		hit.flag = true;
 		hit.t = t;
 		hit.what = this;
@@ -49,5 +49,6 @@ public:
 		hit.normal.normalise();
 	}
 };
+
 
 

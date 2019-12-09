@@ -17,9 +17,12 @@ public:
 
 	Object *next;
 	Vector colour;
-	float kd;
-	float ks;
-	float kr;
+	float kd; //diffuse
+	float ks; //specular
+	float kr; //reflection
+	float kt; //transparency
+	float ri; //refractive index
+	int type; // 0 = diffuse & specular, 1 = add reflection, 2= reflect and refract
 
 	Object()
 	{
@@ -28,11 +31,30 @@ public:
 		kd = 0.5;
 		ks = 0.8;
 		kr = 0.6;
+		kt = 0;
+		ri = 0.33;
+	}
+
+	Object(Vector col, float d, float s, float r, float t, float i, int ty)
+	{
+		next = (Object *)0;
+		colour = col;
+		kd = d;
+		ks = s;
+		kr = r;
+		kt = t;
+		ri = i;
+		type = ty;
 	}
 	
 	virtual void intersection(Ray ray, Hit &hit)
 	{
 
+	}
+
+	int get_type()
+	{
+		return type;
 	}
 };
 
