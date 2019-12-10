@@ -82,7 +82,6 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour, int t
 		for (int i{ 0 }; i < lights.size(); i++)
 		{
 			Vector reflection = Vector();
-			Vector light_direction = Vector();
 			//if we are in shadow and on the correct side of the light, do not add specular and diffuse
 			if (in_shad(closest, lights[i]))
 			{
@@ -92,7 +91,7 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour, int t
 
 			//if we are not in shadow, calculate specular and diffuse components
 			
-			light_direction = lights[i]->get_direction(closest.position);
+			Vector light_direction = lights[i]->get_direction(closest.position);
 
 			float diffuse_component = light_direction.dot(closest.normal);
 				if (diffuse_component < 0) 
@@ -123,51 +122,66 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour, int t
 	else if(type == 1)
 	{
 		//cout << "type = 1 adding reflection " << endl;
-		Vector reflection = Vector();
-		reflection = reflect(ray.direction, closest);
+		Vector spec_dif = add_lighting(ray, closest, depth, colour, 0);
+		colour = colour + spec_dif;
+		//cout << "specular/diff: " << colour.x << " " << colour.y << " " << colour.z << endl;
+
+		Vector reflection = reflect(ray.direction, closest);
 		Ray refl_ray = Ray();
+
 		refl_ray.position = closest.position + reflection * 0.001;
 		refl_ray.direction = reflection;
+		
+		//cout << "refl_ray dir: " << reflection.x << " " << reflection.y << " " << reflection.z << endl;
+		
 		vector<float> recurse = get_pixel(refl_ray, depth + 1);
-		Vector refl_col = Vector(recurse[1], recurse[2], recurse[3]);
+		Vector refl_col = Vector(recurse[0], recurse[1], recurse[2]);
+
+		//cout << "refl " << refl_col.x << " " << refl_col.y << " " << refl_col.z << endl;
+		
 		colour = colour + refl_col * closest.what->kr;
-		type = 0;
-		Vector spec_dif = add_lighting(ray, closest, depth, colour, type);
-		colour = colour + spec_dif;
+		//cout << "final: " << colour.x << " " << colour.y << " " << colour.z << endl;
+
+
 		return colour;
 
 	}
-	/*else
+	else
 	{
-		cout << "type =" << closest.what->type << " adding reflection/refraction" << endl;
-		if (depth < max_depth && depth > 0)
+		//cout << "type =" << closest.what->type << " adding reflection/refraction" << endl;
+		//Vector spec_dif = add_lighting(ray, closest, depth, colour, 0);
+		//colour = colour + spec_dif;
+		//cout << "specular/diff: " << colour.x << " " << colour.y << " " << colour.z << endl;
+
+
+		float kr, kt;
+		Vector refl_col = Vector();
+		Vector refr_col = Vector();
+		fresnel(ray, closest, kr, kt);
+
+		if (kr < 1)
 		{
-			float kr, kt;
-			Vector refl_col = Vector();
-			Vector refr_col = Vector();
-			fresnel(ray, closest, kr, kt);
-
-			if (kr < 1)
-			{
-				Ray refraction(closest.position, refract(ray.direction, closest));
-				refraction.position = closest.position + refraction.direction * 0.001;
-				refr_col = add_lighting(refraction, closest, depth + 1);
-			}
-
-			Vector new_dir = Vector();
-			ray.direction.reflection(closest.normal, new_dir);
-			Ray reflection(closest.position, new_dir);
-			reflection.position = closest.position + reflection.direction * 0.001;
-			refl_col = add_lighting(reflection, closest, depth + 1);
-			colour = colour + refl_col * (kr*closest.what->kr) + refr_col * (1 - kr);
-			colour = colour + ambient;
-			cout << colour.x << " " << colour.y << " " << colour.z << endl;
-			return colour;
+			Ray refraction(closest.position, refract(ray.direction, closest));
+			refraction.position = closest.position + refraction.direction * 0.001;
+			vector<float> refr = get_pixel(refraction, depth + 1);
+			refr_col = Vector(refr[0], refr[1], refr[2]);
 		}
+
+		Vector new_dir = Vector();
+		ray.direction.reflection(closest.normal, new_dir);
+		Ray reflection(closest.position, new_dir);
+		reflection.position = closest.position + reflection.direction * 0.001;
+		vector<float> refl = get_pixel(reflection, depth + 1);
+		refl_col = Vector(refl[0], refl[1], refl[2]);
+			
+		colour = colour + refl_col * (kr*closest.what->kr) + refr_col * (1 - kr);
+		colour = colour + ambient;
+		//cout << colour.x << " " << colour.y << " " << colour.z << endl;
+		return colour;
 		
 
 	}
-	*/
+	
 	cout << "no lighting, depth is " << depth << endl;
 	cout << colour.x << " " << colour.y << " " << colour.z << endl;
 	return colour;
@@ -208,6 +222,7 @@ Vector Scene::reflect(Vector dir, Hit closest)
 {
 	Vector new_dir;
 	new_dir = dir - closest.normal * 2 * closest.normal.dot(dir);
+	new_dir.normalise();
 	return new_dir;
 }
 
@@ -216,6 +231,7 @@ Vector Scene::refract(Vector dir, Hit closest)
 	float n1 = 1;
 	float n2 = closest.what->ri;
 	Vector n = closest.normal;
+	n.normalise();
 	float cosi = dir.dot(closest.normal);
 	if (cosi > 1) cosi = 1.0f;
 	if (cosi < -1) cosi = -1.0f;
@@ -229,11 +245,11 @@ Vector Scene::refract(Vector dir, Hit closest)
 	float cost = 1 - div * div*(1 - cosi * cosi);
 
 	if (cost < 0) return Vector(0, 0, 0);
-	else return Vector(dir*div + n * (sqrtf(cost) - div * cosi));
+	else return Vector(dir*div + n * ( sqrtf(cost) - div * cosi));
 
 }
 
-void Scene::fresnel(Ray ray, Hit closest, float r, float t)
+void Scene::fresnel(Ray ray, Hit closest, float& r, float& t)
 {
 	float n2 = closest.what->ri;
 	r = closest.what->kr;

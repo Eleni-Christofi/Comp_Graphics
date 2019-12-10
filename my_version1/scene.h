@@ -43,7 +43,7 @@ public:
 
 	Vector refract(Vector dir, Hit closest);
 
-	void fresnel(Ray ray, Hit closest, float r, float t);
+	void fresnel(Ray ray, Hit closest, float& r, float& t);
 
 
 
