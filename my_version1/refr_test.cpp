@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	cout << "camera set up" << endl;
 
 	//Set up the Scene object
-	Scene scene = Scene(Vector(175, 175, 175), 0.3, 2);
+	Scene scene = Scene(Vector(175, 175, 175), 0.3, 5);
 	cout << "empty scene set up" << endl;
 
 	//Put some lights in
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	scene.lights.push_back(l1);
 
 	// The following transform allows 4D homogeneous coordinates to be transformed. It moves the supplied teapot model to somewhere visible. (From lab 2)
-	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 11.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	Transform *transform = new Transform(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 10.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	// load in the teapot
 	PolyMesh pm((char *)"teapot_smaller.ply", transform);
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
 
 
-	cout << "sphere added" << endl;
+	//cout << "sphere added" << endl;
 
 	//add plane as the 'floor'
 	/*Plane floor = Plane(Vector(0, 1, 0), Vector(0, -5, 0));
@@ -90,17 +90,24 @@ int main(int argc, char *argv[])
 	*/
 
 	//add lots of spheres as backdrop
+	/*
 	Sphere b1 = Sphere(Vertex(0, 0, 1.5), 1);
 	b1.colour = Vector();
 	b1.type = 2;
 	b1.ri = 1.517;
-	b1.kt = 0.5;
 	b1.kr = 0.05;
 	b1.next = &pm;
 	scene.objects = &b1;
+	*/
 
-
-
+	Transform *transform2 = new Transform(1, 0, 0, -2, 0, 1, 0, 1, 0, 0, 1, 2, 0, 0, 0, 1);
+	PolyMesh cube((char *)"cube.ply", transform2);
+	cube.colour = Vector();
+	cube.type = 2;
+	cube.ri = 1.52;
+	cube.kr = 0.05;
+	cube.next = &pm;
+	scene.objects = &cube;
 
 
 

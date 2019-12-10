@@ -154,14 +154,16 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour, int t
 		//cout << "specular/diff: " << colour.x << " " << colour.y << " " << colour.z << endl;
 
 
-		float kr, kt;
+		float kr;
 		Vector refl_col = Vector();
 		Vector refr_col = Vector();
-		fresnel(ray, closest, kr, kt);
+		fresnel(ray, closest, kr);
 
 		if (kr < 1)
 		{
-			Ray refraction(closest.position, refract(ray.direction, closest));
+			Vector ref = refract(ray.direction, closest);
+			ref.normalise();
+			Ray refraction(closest.position, ref);
 			refraction.position = closest.position + refraction.direction * 0.001;
 			vector<float> refr = get_pixel(refraction, depth + 1);
 			refr_col = Vector(refr[0], refr[1], refr[2]);
@@ -169,17 +171,18 @@ Vector Scene::add_lighting(Ray ray, Hit closest, int depth, Vector colour, int t
 
 		Vector new_dir = Vector();
 		ray.direction.reflection(closest.normal, new_dir);
-		Ray reflection(closest.position, new_dir);
+		new_dir.normalise();
+		Ray reflection(closest.position, new_dir );
 		reflection.position = closest.position + reflection.direction * 0.001;
 		vector<float> refl = get_pixel(reflection, depth + 1);
 		refl_col = Vector(refl[0], refl[1], refl[2]);
 			
-		colour = colour + refl_col * (kr*closest.what->kr) + refr_col * (1 - kr);
+		colour = colour + refl_col * (kr) + refr_col * (1 - kr);
 		colour = colour + ambient;
 		//cout << colour.x << " " << colour.y << " " << colour.z << endl;
 		return colour;
 		
-
+		//closest.what->kr
 	}
 	
 	cout << "no lighting, depth is " << depth << endl;
@@ -245,37 +248,35 @@ Vector Scene::refract(Vector dir, Hit closest)
 	float cost = 1 - div * div*(1 - cosi * cosi);
 
 	if (cost < 0) return Vector(0, 0, 0);
-	else return Vector(dir*div + n * ( sqrtf(cost) - div * cosi));
+	else return Vector(dir*div + n * (div * cosi - sqrtf(cost)));
 
 }
 
-void Scene::fresnel(Ray ray, Hit closest, float& r, float& t)
+void Scene::fresnel(Ray ray, Hit closest, float& r)
 {
 	float n2 = closest.what->ri;
 	r = closest.what->kr;
-	t = closest.what->kt;
 
 	float cosi = ray.direction.dot(closest.normal);
 	if (cosi > 1) cosi = 1;
 	if (cosi < -1) cosi = -1;
 	float n1 = 1;
 	if (cosi > 0) swap(n1, n2);
-	float div = n1 / n2;
-	float k = 1 - div * div*(1 - cosi * cosi);
+	
+	float sint = n1 / n2 * sqrtf(max(0.f, 1 - cosi * cosi));
 
 	//check for total internal reflection 
-	if (k < 0) r = 1;
+	if (sint >= 1) { r = 1; } //cout << "total int ref" << endl;
 	else
 	{
-		float cost = sqrtf(k);
+		float cost = sqrtf(max(0.f , 1 - sint*sint));
 		cosi = fabsf(cosi);
 
-		float Rs = ((div*cosi) - cost) / ((div * cosi) + cost);
-		float Rp = (cosi - (div*cost)) / (cosi + (div*cost));
+		float Rs = ((n2*cosi) - cost) / ((n2 * cosi) + cost);
+		float Rp = (cosi - (n2*cost)) / (cosi + (n2*cost));
 
 		r = ((Rs*Rs) + (Rp*Rp)) / 2;
 	}
-	t = 1 - r;
 }
 
 

@@ -54,7 +54,7 @@ public:
 	//method to calculate ray to pixel (i,j) from camera 
 	Ray make_ray(int i, int j)
 	{
-		cout << "i: " << i << " j: " << j << endl;
+		//cout << "i: " << i << " j: " << j << endl;
 		Vector point = top_left + (u*i*pixel_w) - (v*j*pixel_h);
 		Vector dir = point - camera_pos;
 		dir.normalise();
